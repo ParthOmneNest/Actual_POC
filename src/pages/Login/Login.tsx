@@ -1,8 +1,8 @@
-import illustration from '../../assets/Illustrations.png'
 import carousel from '../../assets/Carousel.png'
+import illustration from '../../assets/Illustrations.png'
 import logo from '../../assets/OmneNest_icon.png'
-import { LoginOtpForm } from './components/LoginOtpForm'
 import { useAuthStore } from '../../store/useAuthStore'
+import { AuthContainer } from './components/AuthContainer'
 import { ForgotPassword } from './components/ForgotPassword'
 import { SetPassword } from './components/SetPassword'
 
@@ -40,13 +40,13 @@ export const Login = () => {
             </div>
 
             {/* right side */}
-            <div className='w-full md:w-1/2 h-full bg-white flex flex-col justify-center items-start px-8 md:px-12 '>
-                <div className='w-full max-w-sm'>
-                    <div className="flex flex-row gap-2 mb-4">
-                        <img src={logo} alt="logo" className="text-[#2A2A2B] w-25 h-10 " />
-                        <p className="md:hidden text-sm font-semibold">Nt Web</p>
+            <div className='w-full md:w-1/2 h-full bg-white flex flex-col justify-center items-center md:items-start px-6 sm:px-12 md:px-16'>
+                <div className='w-full max-w-sm sm:max-w-md md:max-w-sm'>
+                    <div className="flex flex-row mb-4">
+                        <img src={logo} alt="logo" className="text-[#2A2A2B] w-25 h-8 -mr-16" />
+                        <p className="md:hidden text-sm font-semibold ">Nt Web</p>
                     </div>
-                    <h4 className="text-[#2A2A2B] text-xl md:text-2xl font-semibold mb-16">
+                    <h4 className="text-[#2A2A2B] text-xl md:text-2xl font-semibold mb-10 md:mb-16">
                         {loginStep === 'forgot-credentials' ? 'Forgot password' :
                             loginStep === 'set-password' ? 'Set password' :
                                 'Welcome to Nest App'}
@@ -54,7 +54,7 @@ export const Login = () => {
 
                     {/* the various login/otp/forget password forms as per loginstep variable */}
                     {(loginStep === 'credentials' || loginStep === 'otp' || loginStep === 'idle') && (
-                        <LoginOtpForm />
+                        <AuthContainer />
                     )}
 
                     {loginStep === 'forgot-credentials' && (

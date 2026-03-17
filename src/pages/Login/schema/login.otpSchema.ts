@@ -1,4 +1,4 @@
-import {z} from "zod"
+import { z } from "zod";
 
 // Login schema
 export const loginSchema=z.object({
@@ -22,6 +22,18 @@ export const forgotPasswordSchema = z.object({
         .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN format"),
 });
 
+export const setPasswordSchema = z.object({
+    password: z.string()
+        .min(10, "Minimum 10 characters")
+        .regex(/[0-9]/, "Minimum 1 digit")
+        .regex(/[^A-Za-z0-9]/, "Minimum 1 special character"),
+    confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+});
+
 export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
-export type LoginFormData=z.infer<typeof loginSchema>;
-export type OtpFormData=z.infer<typeof otpSchema>;
+export type LoginFormData = z.infer<typeof loginSchema>;
+export type OtpFormData = z.infer<typeof otpSchema>;
+export type SetPasswordData = z.infer<typeof setPasswordSchema>;

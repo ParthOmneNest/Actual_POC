@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       user: null,
-      loginStep: "idle",
+      loginStep: "set-password",
       loginUsername: null,
       isLoading: false,
       error: null,
