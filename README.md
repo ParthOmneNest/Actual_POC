@@ -1,4 +1,5 @@
 ### NT WEB
 
 ### features
-## login, otp, forgot password done
+## 2.3 except mobile token - login, otp 
+## 2.5 forgot userId
