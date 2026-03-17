@@ -1,6 +1,6 @@
 import api from "./axios";
 import { DEVICE_PUBLIC_KEY } from "../services/config";
-import type { LoginPayload,OtpPayload } from "../types/userAuthType";
+
 
 // ─── Pre Auth Handshake ───────────────────────────────────────
 export const preAuthHandshake = async () => {
@@ -11,17 +11,19 @@ export const preAuthHandshake = async () => {
     );
     return response.data;
   } catch (error: any) {
-    console.error("Pre-Auth Handshake error:", error.response?.data);
+    console.error("Full error response:", error.response?.data);
+  console.error("Errors array:", error.response?.data?.errors);  
+  console.error("Headers sent:", error.config?.headers);
     throw error;
   }
 };
 
 // ─── Login ────────────────────────────────────────────────────
-export const loginApi = async (payload: LoginPayload) => {
+export const loginApi = async (username:string,password:string) => {
   try {
     const response = await api.post(
       "/v1/api/auth/login",
-      payload
+      { username, password }
     );
     return response.data;
   } catch (error: any) {
@@ -31,11 +33,11 @@ export const loginApi = async (payload: LoginPayload) => {
 };
 
 // ─── Validate OTP ─────────────────────────────────────────────
-export const validateOtpApi = async (payload: OtpPayload) => {
+export const validateOtpApi = async (username: string, otpValue: string) => {
   try {
     const response = await api.post(
       "/v1/api/auth/validate-otp",
-      { ...payload, otp: payload.otp }
+       { username, otp: parseInt(otpValue, 10) }
     );
     return response.data;
   } catch (error: any) {

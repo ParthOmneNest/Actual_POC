@@ -17,6 +17,7 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: Omit<ValidateOtpResponse, "jwtTokens"> | null;
+  loginUsername:string|null;
   loginStep: LoginStep;
   isLoading: boolean;
   error: string | null;
@@ -37,6 +38,7 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       user: null,
       loginStep: "idle",
+     loginUsername:null,
       isLoading: false,
       error: null,
 
@@ -47,7 +49,11 @@ export const useAuthStore = create<AuthState>()(
           await preAuthHandshake();
           set({ loginStep: "credentials" }); // move to login step
         } catch (error: any) {
+          console.error("Prehandshake failed: ",error);
+
           set({ error: error.response?.data?.message || "Handshake failed" });
+          // set({ loginStep: "credentials" }); // move to login step
+
         } finally {
           set({ isLoading: false });
         }
@@ -57,9 +63,10 @@ export const useAuthStore = create<AuthState>()(
       login: async (payload: LoginPayload) => {
         set({ isLoading: true, error: null });
         try {
-          await loginApi(payload);
-          set({ loginStep: "otp" }); 
+          await loginApi(payload.username, payload.password);
+          set({ loginStep: "otp",loginUsername: payload.username });
         } catch (error: any) {
+          console.log(" Login failed →", error.response?.data);
           set({ error: error.response?.data?.message || "Login failed" });
         } finally {
           set({ isLoading: false });
@@ -70,18 +77,23 @@ export const useAuthStore = create<AuthState>()(
       validateOtp: async (payload: OtpPayload) => {
         set({ isLoading: true, error: null });
         try {
-          const response: ValidateOtpResponse = await validateOtpApi(payload);
-
-          const { jwtTokens, ...userInfo } = response; 
+          const response = await validateOtpApi(
+            payload.username,
+            payload.otp.toString()   // 👈 pass separately
+          );
+          console.log("OTP response:", response);
 
           set({
-            accessToken: jwtTokens.accessToken,
-            refreshToken: jwtTokens.refreshToken,
-            user: userInfo,
+            accessToken: response.jwtTokens?.accessToken,
+            refreshToken: response.jwtTokens?.refreshToken,
+            user: response,
+            loginUsername: null,
             loginStep: "success",
           });
         } catch (error: any) {
-          set({ error: error.response?.data?.message || "OTP validation failed" });
+          console.log(" OTP failed →", error.response?.data);
+         set({ 
+        error: error.response?.data?.message || "Incorrect OTP, You have 2 attempts remaining" });
         } finally {
           set({ isLoading: false });
         }
@@ -94,6 +106,7 @@ export const useAuthStore = create<AuthState>()(
           refreshToken: null,
           user: null,
           loginStep: "idle",
+          loginUsername: null,
           error: null,
         });
       },
@@ -103,11 +116,12 @@ export const useAuthStore = create<AuthState>()(
     }),
 
     {
-      name: "auth-storage",           
-      partialize: (state) => ({     
+      name: "auth-storage",
+      partialize: (state) => ({
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         user: state.user,
+        loginUsername: state.loginUsername
       }),
     }
   )
