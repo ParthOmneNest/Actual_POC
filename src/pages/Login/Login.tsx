@@ -2,8 +2,12 @@ import illustration from '../../assets/Illustrations.png'
 import carousel from '../../assets/Carousel.png'
 import logo from '../../assets/OmneNest_icon.png'
 import { LoginOtpForm } from './components/LoginOtpForm'
+import { useAuthStore } from '../../store/useAuthStore'
+import { ForgotPassword } from './components/ForgotPassword'
+import { SetPassword } from './components/SetPassword'
 
 export const Login = () => {
+    const { loginStep } = useAuthStore();
     return (
         <div className="flex flex-row w-full h-screen gap-6">
             {/* left side */}
@@ -31,7 +35,7 @@ export const Login = () => {
                 </div>
                 {/* carousel */}
                 <div className='flex justify-center'>
-                <img src={carousel} alt="carousel" className='mb-8'  />
+                    <img src={carousel} alt="carousel" className='mb-8' />
                 </div>
             </div>
 
@@ -42,11 +46,24 @@ export const Login = () => {
                         <img src={logo} alt="logo" className="text-[#2A2A2B] w-25 h-10 " />
                         <p className="md:hidden text-sm font-semibold">Nt Web</p>
                     </div>
-                    <h4 className=" text-[#2A2A2B] text-xl md:text-2xl font-semibold mb-16">Welcome to Nest App</h4>
+                    <h4 className="text-[#2A2A2B] text-xl md:text-2xl font-semibold mb-16">
+                        {loginStep === 'forgot-credentials' ? 'Forgot password' :
+                            loginStep === 'set-password' ? 'Set password' :
+                                'Welcome to Nest App'}
+                    </h4>
 
                     {/* the various login/otp/forget password forms as per loginstep variable */}
+                    {(loginStep === 'credentials' || loginStep === 'otp' || loginStep === 'idle') && (
+                        <LoginOtpForm />
+                    )}
 
-                    <LoginOtpForm />
+                    {loginStep === 'forgot-credentials' && (
+                        <ForgotPassword />
+                    )}
+
+                    {loginStep === 'set-password' && (
+                        <SetPassword />
+                    )}
                 </div>
             </div>
         </div>

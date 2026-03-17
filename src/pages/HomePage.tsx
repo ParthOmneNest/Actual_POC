@@ -3,14 +3,9 @@ import logo from '../assets/OmneNest_icon.png'
 
 export const HomePage = () => {
     const { logout } = useAuthStore();
-    const handleLogout = () => {
-        console.log("logging out..")
-        logout();
-    }
     return (
         <div className="flex items-center justify-center min-h-screen bg-white font-inter gap-3">
             <div className="flex flex-col items-center gap-6">
-                
                 
                 <div className="flex items-center">
                     <img src={logo} alt="Logo" className="w-20 h-10 object-contain -mr-10" />

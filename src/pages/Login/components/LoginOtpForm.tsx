@@ -15,7 +15,7 @@ import qrcode from "../../../assets/scan-qr-code.png";
 import cautionIcon from "../../../assets/Error.png";
 
 export const LoginOtpForm = () => {
-    const { login, validateOtp, loginStep, error, runPreHandshake } = useAuthStore();
+    const { login, validateOtp, loginStep, error, runPreHandshake,setStep } = useAuthStore();
     const [showPassword, setShowPassword] = useState(false);
 
 
@@ -103,6 +103,8 @@ export const LoginOtpForm = () => {
             otp: parseInt(finalOtpString, 10), 
         });
     };
+
+
     if (loginStep === 'idle') {
         return (
             <div className="flex items-center justify-center w-full py-10">
@@ -190,7 +192,8 @@ export const LoginOtpForm = () => {
 
                     {/* ForgotuserID/password + Guest */}
                     <div className="flex flex-row justify-between items-center">
-                        <button type="button" className="text-sm text-[#0F62FE] cursor-pointer">
+                        <button type="button" className="text-sm text-[#0F62FE] cursor-pointer"
+                        onClick={()=>setStep('forgot-credentials')}>
                             Forgot user ID or password?
                         </button>
                         <button type="button" className="text-sm text-[#0F62FE] cursor-pointer">

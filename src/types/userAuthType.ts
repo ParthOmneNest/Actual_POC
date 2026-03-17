@@ -48,4 +48,4 @@ export interface ValidateOtpResponse{
     isPasswordExpired:boolean
     indexEnabledExchanges:string[]|null
 }
-export type LoginStep = 'idle' | 'credentials' | 'otp' | 'success';
+export type LoginStep = 'idle' | 'credentials' | 'otp' |'forgot-credentials'| 'set-password' | 'success';

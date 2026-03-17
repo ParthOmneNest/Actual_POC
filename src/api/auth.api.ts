@@ -45,3 +45,32 @@ export const validateOtpApi = async (username: string, otpValue: string) => {
     throw error;
   }
 };
+
+// ─── Forgot userId ─────────────────────────────────────────────
+export const forgotUserIdApi = async (panNumber: string, emailId: string) => {
+  try {
+    const response = await api.post("/v1/api/auth/forgot-user-id", {
+      panNumber,
+      emailId,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Forgot User ID API Error:", error.response?.data || error.message);
+    throw error; 
+  }
+};
+
+
+// ─── Forgot Password ─────────────────────────────────────────────
+export const forgotPasswordApi = async (panNumber: string, username: string) => {
+  try {
+    const response = await api.post("/v1/api/auth/forgot-password", {
+      panNumber,
+      username,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Forgot Password API Error:", error.response?.data || error.message);
+    throw error; 
+  }
+};
