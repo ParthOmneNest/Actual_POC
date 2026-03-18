@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { loginSchema, type LoginFormData } from "../schema/login.otpSchema";
 
+import badgeGreen from "../../../assets/badge-check-green.png";
 import cautionIcon from "../../../assets/Error.png";
 import eyeClose from "../../../assets/Eyeclosed.png";
 import eyeOpen from "../../../assets/Eyeopen.png";
@@ -90,19 +91,18 @@ export const CredentialsForm = () => {
                 <button
                     type="submit"
                     disabled={!isValid}
-                    className={`w-full py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-[#FFFFFF] ${
-                        isValid
+                    className={`w-full py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-[#FFFFFF] ${isValid
                             ? "bg-[#0F62FE] cursor-pointer"
                             : "bg-[#ECEDEE] cursor-not-allowed"
-                    }`}
+                        }`}
                 >
                     Login
                 </button>
 
                 {/* Links */}
                 <div className="flex flex-row justify-between items-center mt-2">
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         className="text-sm text-[#0F62FE] cursor-pointer hover:underline"
                         onClick={() => setStep('forgot-credentials')}
                     >
@@ -115,12 +115,20 @@ export const CredentialsForm = () => {
 
             </div>
 
-            {/* Error Message */}
-            {(errors.username || errors.password || error) && (
-                <div className="flex flex-row items-center gap-2 bg-[#FAEBE9] text-[#CA3521] px-4 py-3 rounded-lg mt-2">
-                    <img src={cautionIcon} alt="caution" className="w-4 h-4 shrink-0" />
+            {error && (
+                <div className={`flex flex-row items-center gap-2 px-4 py-3 rounded-lg mt-4 
+        ${error.includes("sent") || error.includes("successfully")
+                        ? "bg-[#E8F2EE] text-[#198055]" 
+                        : "bg-[#FAEBE9] text-[#CA3521]" 
+                    }`}
+                >
+                    <img
+                        src={error.includes("sent") ? badgeGreen : cautionIcon}
+                        alt="status"
+                        className="w-4 h-4 shrink-0"
+                    />
                     <p className="font-inter font-medium text-[14px] leading-5 tracking-normal">
-                        Invalid username or password
+                        {error ? error : "Invalid username or password"}
                     </p>
                 </div>
             )}

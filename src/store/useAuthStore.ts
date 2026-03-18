@@ -23,7 +23,7 @@ interface AuthState {
   loginStep: LoginStep;
   isLoading: boolean;
   error: string | null;
-  flowMode:'login' | 'forgot-password' | 'idle'
+  flowMode:'login' | 'forgot-password' |'forgot-id'| 'idle'
 
   // actions
   setStep: (step: LoginStep) => void;
@@ -77,7 +77,7 @@ export const useAuthStore = create<AuthState>()(
           set({ loginStep: "otp", loginUsername: payload.username });
         } catch (error: any) {
           console.log(" Login failed →", error.response?.data);
-          set({ error: error.response?.data?.message || "Login failed" });
+          set({ error: error.response?.data?.message || "Invalid user ID or password" });
         } finally {
           set({ isLoading: false });
         }
@@ -86,10 +86,10 @@ export const useAuthStore = create<AuthState>()(
 
       // 1. Forgot User ID (PAN + Email)
       forgotUserId: async (pan: string, email: string) => {
-        set({ isLoading: true, error: null });
+        set({ flowMode:'forgot-id', isLoading: true, error: null });
         try {
           await forgotUserIdApi(pan, email);
-          set({ error: "User ID sent to your registered email." });
+          set({ loginStep:"otp" });
         } catch (error: any) {
           const backendError = error.response?.data?.errors?.[0]?.errorMessage;
           set({ error: backendError || "Failed to retrieve User ID" });
@@ -135,10 +135,12 @@ export const useAuthStore = create<AuthState>()(
               loginUsername: null,
               loginStep: "success",
             });
-          } else {
+          } else if(flowMode === 'forgot-password') {
             set({
               loginStep: "set-password"
             });
+          } else if(flowMode === 'forgot-id'){
+            set({loginStep:'credentials',error:'UserId has been sent to you register email'})
           }
         } catch (error: any) {
           console.log(" OTP failed →", error.response?.data);
