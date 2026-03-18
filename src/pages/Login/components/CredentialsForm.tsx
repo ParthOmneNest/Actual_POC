@@ -11,13 +11,13 @@ import eyeOpen from "../../../assets/Eyeopen.png";
 import qrcode from "../../../assets/scan-qr-code.png";
 
 export const CredentialsForm = () => {
-    const { login, error, setStep } = useAuthStore();
+    const { login, error, success,setStep } = useAuthStore();
     const [showPassword, setShowPassword] = useState(false);
 
     const {
         register,
         handleSubmit,
-        formState: { errors, isValid },
+        formState: { isValid },
     } = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
         mode: "onChange", // Validates as the user types, making isValid reliable
@@ -115,20 +115,20 @@ export const CredentialsForm = () => {
 
             </div>
 
-            {error && (
+            {(error || success) && (
                 <div className={`flex flex-row items-center gap-2 px-4 py-3 rounded-lg mt-4 
-        ${error.includes("sent") || error.includes("successfully")
-                        ? "bg-[#E8F2EE] text-[#198055]" 
-                        : "bg-[#FAEBE9] text-[#CA3521]" 
+        
+                        ${success ? 
+                        "bg-[#E8F2EE] text-[#198055]":"bg-[#FAEBE9] text-[#CA3521]" }
                     }`}
                 >
                     <img
-                        src={error.includes("sent") ? badgeGreen : cautionIcon}
+                        src={success ? badgeGreen : cautionIcon}
                         alt="status"
                         className="w-4 h-4 shrink-0"
                     />
                     <p className="font-inter font-medium text-[14px] leading-5 tracking-normal">
-                        {error ? error : "Invalid username or password"}
+                        {error || success}
                     </p>
                 </div>
             )}

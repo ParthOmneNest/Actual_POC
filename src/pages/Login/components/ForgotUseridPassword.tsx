@@ -2,9 +2,9 @@ import { useForm } from "react-hook-form";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useState } from "react";
 
-export const ForgotPassword = () => {
+export const ForgotUseridPassword = () => {
     const [mode, setMode] = useState<'password' | 'userid'>('password');
-    const { forgotPassword, forgotUserId, setStep } = useAuthStore();
+    const { forgotPassword, forgotUserId, setStep,clearError } = useAuthStore();
     const { register, handleSubmit, watch, reset } = useForm({
         defaultValues: { identifier: "", pan: "" }
     });
@@ -85,7 +85,10 @@ export const ForgotPassword = () => {
 
                 <button
                     type="button"
-                    onClick={() => setStep('credentials')}
+                    onClick={() =>{
+                        setStep('credentials')
+                        clearError();
+                    }} 
                     className="flex items-center justify-center gap-2 text-[#0F62FE] text-sm font-medium cursor-pointer"
                 >
                     ← Go back

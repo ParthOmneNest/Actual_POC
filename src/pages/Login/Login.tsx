@@ -3,7 +3,7 @@ import illustration from '../../assets/Illustrations.png'
 import logo from '../../assets/OmneNest_icon.png'
 import { useAuthStore } from '../../store/useAuthStore'
 import { AuthContainer } from './components/AuthContainer'
-import { ForgotPassword } from './components/ForgotPassword'
+import { ForgotUseridPassword } from './components/ForgotUseridPassword'
 import { SetMpin } from './components/SetMpin'
 import { SetPassword } from './components/SetPassword'
 
@@ -59,7 +59,7 @@ export const Login = () => {
                     )}
 
                     {loginStep === 'forgot-credentials' && (
-                        <ForgotPassword />
+                        <ForgotUseridPassword />
                     )}
 
                     {loginStep === 'set-password' && (

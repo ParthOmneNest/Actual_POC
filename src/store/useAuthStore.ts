@@ -23,6 +23,7 @@ interface AuthState {
   loginStep: LoginStep;
   isLoading: boolean;
   error: string | null;
+  success:string|null;
   flowMode:'login' | 'forgot-password' |'forgot-id'| 'idle'
 
   // actions
@@ -48,6 +49,7 @@ export const useAuthStore = create<AuthState>()(
       loginUsername: null,
       isLoading: false,
       error: null,
+      success:null,
       flowMode:'idle',
 
       setStep: (step: LoginStep) => set({ loginStep: step, error: null }),
@@ -71,7 +73,7 @@ export const useAuthStore = create<AuthState>()(
 
       // ── Step 2: Login ──
       login: async (payload: LoginPayload) => {
-        set({flowMode:"login", isLoading: true, error: null });
+        set({flowMode:"login", isLoading: true,success:null, error: null });
         try {
           await loginApi(payload.username, payload.password);
           set({ loginStep: "otp", loginUsername: payload.username });
@@ -140,7 +142,10 @@ export const useAuthStore = create<AuthState>()(
               loginStep: "set-password"
             });
           } else if(flowMode === 'forgot-id'){
-            set({loginStep:'credentials',error:'UserId has been sent to you register email'})
+            set({loginStep:'credentials',
+              success:'UserId has been sent to you register email',
+              error:null
+            })
           }
         } catch (error: any) {
           console.log(" OTP failed →", error.response?.data);
@@ -165,7 +170,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       // ── Clear Error ──
-      clearError: () => set({ error: null }),
+      clearError: () => set({ error: null,success:null }),
     }),
 
 
