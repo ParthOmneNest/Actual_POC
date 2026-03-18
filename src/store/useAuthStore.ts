@@ -23,6 +23,7 @@ interface AuthState {
   loginStep: LoginStep;
   isLoading: boolean;
   error: string | null;
+  flowMode:'login' | 'forgot-password' | 'idle'
 
   // actions
   setStep: (step: LoginStep) => void;
@@ -33,6 +34,7 @@ interface AuthState {
   forgotPassword: (pan: string, username: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -42,10 +44,11 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       user: null,
-      loginStep: "set-password",
+      loginStep: "idle",
       loginUsername: null,
       isLoading: false,
       error: null,
+      flowMode:'idle',
 
       setStep: (step: LoginStep) => set({ loginStep: step, error: null }),
 
@@ -68,7 +71,7 @@ export const useAuthStore = create<AuthState>()(
 
       // ── Step 2: Login ──
       login: async (payload: LoginPayload) => {
-        set({ isLoading: true, error: null });
+        set({flowMode:"login", isLoading: true, error: null });
         try {
           await loginApi(payload.username, payload.password);
           set({ loginStep: "otp", loginUsername: payload.username });
@@ -97,7 +100,7 @@ export const useAuthStore = create<AuthState>()(
 
       // 2. Forgot Password (PAN + Username)
       forgotPassword: async (pan: string, username: string) => {
-        set({ isLoading: true, error: null });
+        set({flowMode:"forgot-password", isLoading: true, error: null });
         try {
           await forgotPasswordApi(pan, username);
 
@@ -122,7 +125,8 @@ export const useAuthStore = create<AuthState>()(
             payload.otp.toString()
           );
           console.log("OTP response:", response);
-          if (response.jwtTokens?.accessToken) {
+          const {flowMode} = useAuthStore.getState();
+          if (flowMode=='login'&& response.jwtTokens?.accessToken) {
 
             set({
               accessToken: response.jwtTokens?.accessToken,
@@ -169,7 +173,8 @@ export const useAuthStore = create<AuthState>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         user: state.user,
-        loginUsername: state.loginUsername
+        loginUsername: state.loginUsername,
+        flowMode: state.flowMode
       }),
     }
   )

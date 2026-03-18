@@ -4,6 +4,7 @@ import logo from '../../assets/OmneNest_icon.png'
 import { useAuthStore } from '../../store/useAuthStore'
 import { AuthContainer } from './components/AuthContainer'
 import { ForgotPassword } from './components/ForgotPassword'
+import { SetMpin } from './components/SetMpin'
 import { SetPassword } from './components/SetPassword'
 
 export const Login = () => {
@@ -63,6 +64,9 @@ export const Login = () => {
 
                     {loginStep === 'set-password' && (
                         <SetPassword />
+                    )}
+                    {loginStep === 'set-mpin' && (
+                        <SetMpin />
                     )}
                 </div>
             </div>

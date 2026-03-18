@@ -10,7 +10,7 @@ import badgeGreen from "../../../assets/badge-check-green.png";
 import badgeGray from "../../../assets/badge-check.png";
 
 export const SetPassword = () => {
-    // Note: Assuming there is a `resetPassword` or similar action in useAuthStore for submitting this form.
+
     const { error } = useAuthStore();
     
     const [showPassword, setShowPassword] = useState(false);

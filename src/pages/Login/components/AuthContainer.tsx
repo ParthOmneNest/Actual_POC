@@ -14,7 +14,6 @@ export const AuthContainer = () => {
         }
     }, [loginStep, runPreHandshake]);
 
-    // Render logic based on current authentication step
     if (loginStep === 'idle') {
         return (
             <div className="flex items-center justify-center w-full py-10">
