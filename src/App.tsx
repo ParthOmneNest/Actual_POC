@@ -1,7 +1,7 @@
 
 import './App.css'
 import { HomePage } from './pages/HomePage'
-import { Login } from './pages/Login/Login'
+import { Login } from './pages/Auth/Login'
 import { useAuthStore } from './store/useAuthStore'
 
 function App() {

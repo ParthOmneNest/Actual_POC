@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "../../../shared/components/Button";
+import { OtpInputBoxes } from "../../../shared/components/OtpInputBoxes";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { otpSchema, type OtpFormData } from "../schema/login.otpSchema";
 
@@ -29,27 +31,6 @@ export const OtpVerificationForm = () => {
         const countdown = setInterval(() => setTimer((prev) => prev - 1), 1000);
         return () => clearInterval(countdown);
     }, [timer]);
-
-    // Handle Individual OTP Input Changes
-    const handleOtpChange = (index: number, value: string) => {
-        if (!/^\d*$/.test(value)) return; // Only allow digits
-        
-        const newOtp = [...otp];
-        newOtp[index] = value.slice(-1); // Take only the last typed character
-        setOtp(newOtp);
-        
-        // Auto-focus next input
-        if (value && index < 3) {
-            document.getElementById(`otp-${index + 1}`)?.focus();
-        }
-    };
-
-    // Handle Backspace for Auto-focus Previous
-    const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
-        if (e.key === "Backspace" && !otp[index] && index > 0) {
-            document.getElementById(`otp-${index - 1}`)?.focus();
-        }
-    };
 
     const handleResend = () => {
         setTimer(30);
@@ -91,29 +72,13 @@ export const OtpVerificationForm = () => {
 
             {/* OTP Input Boxes */}
             <div className="flex flex-col gap-2">
-                <div className="flex flex-row justify-between gap-3">
-                    {otp.map((val, index) => (
-                        <input
-                            key={index}
-                            id={`otp-${index}`}
-                            type="text"
-                            inputMode="numeric"
-                            maxLength={1}
-                            value={val}
-                            onChange={(e) => handleOtpChange(index, e.target.value)}
-                            onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                            className={`
-                                w-full h-12 text-center rounded-lg
-                                text-base font-medium font-inter
-                                outline-none transition-colors
-                                ${error || otpErrors.otp
-                                    ? "border border-[#CA3521] focus:border-[#CA3521]"
-                                    : "border border-gray-200 focus:border-[#0F62FE]"
-                                }
-                            `}
-                        />
-                    ))}
-                </div>
+                <OtpInputBoxes
+                    value={otp}
+                    onChange={setOtp}
+                    error={!!(error || otpErrors.otp)}
+                    idPrefix="otp"
+                    type="text"
+                />
 
                 {/* Validation Error Message */}
                 {(otpErrors.otp || error) && (
@@ -141,20 +106,13 @@ export const OtpVerificationForm = () => {
             </div>
 
             {/* Submit Button */}
-            <button
+            <Button
                 type="submit"
                 disabled={!isOtpFilled}
-                className={`
-                    w-full py-3 rounded-lg text-sm font-medium font-inter
-                    transition-colors duration-200 mt-2
-                    ${isOtpFilled
-                        ? "bg-[#0F62FE] text-[#FFFFFF] cursor-pointer"
-                        : "bg-[#ECEDEE] text-gray-400 cursor-not-allowed"
-                    }
-                `}
+                className="mt-2"
             >
                 Verify
-            </button>
+            </Button>
         </form>
     );
 };

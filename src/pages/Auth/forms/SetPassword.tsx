@@ -1,20 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "../../../shared/components/Button";
+import { PasswordInput } from "../../../shared/components/PasswordInput";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { setPasswordSchema, type SetPasswordData } from "../schema/login.otpSchema";
 
-import eyeClose from "../../../assets/Eyeclosed.png";
-import eyeOpen from "../../../assets/Eyeopen.png";
 import badgeGreen from "../../../assets/badge-check-green.png";
 import badgeGray from "../../../assets/badge-check.png";
 
 export const SetPassword = () => {
 
     const { error } = useAuthStore();
-    
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
         register,
@@ -56,61 +53,19 @@ export const SetPassword = () => {
 
             <div className="flex flex-col gap-4">
                 {/* New Password */}
-                <div className="flex flex-col gap-1">
-                    <label className="font-inter font-medium text-sm leading-none tracking-normal text-[#555555]">
-                        New Password
-                    </label>
-                    <div className="relative">
-                        <input
-                            {...register("password")}
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter new password"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-[#0F62FE] transition-colors pr-10"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                        >
-                            <img
-                                src={showPassword ? eyeOpen : eyeClose}
-                                alt={showPassword ? "hide password" : "show password"}
-                                className="w-5 h-5"
-                            />
-                        </button>
-                    </div>
-                </div>
+                <PasswordInput
+                    {...register("password")}
+                    label="New Password"
+                    placeholder="Enter new password"
+                />
 
                 {/* Re-enter Password */}
-                <div className="flex flex-col gap-1">
-                    <label className="font-inter font-medium text-sm leading-none tracking-normal text-[#555555]">
-                        Re-enter Password
-                    </label>
-                    <div className="relative">
-                        <input
-                            {...register("confirmPassword")}
-                            type={showConfirmPassword ? "text" : "password"}
-                            placeholder="Re-enter new password"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-[#0F62FE] transition-colors pr-10"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                        >
-                            <img
-                                src={showConfirmPassword ? eyeOpen : eyeClose}
-                                alt={showConfirmPassword ? "hide password" : "show password"}
-                                className="w-5 h-5"
-                            />
-                        </button>
-                    </div>
-                    {errors.confirmPassword && (
-                        <p className="text-[#CA3521] font-inter font-medium text-[12px] mt-1">
-                            {errors.confirmPassword.message}
-                        </p>
-                    )}
-                </div>
+                <PasswordInput
+                    {...register("confirmPassword")}
+                    label="Re-enter Password"
+                    placeholder="Re-enter new password"
+                    error={errors.confirmPassword?.message}
+                />
             </div>
 
             {/* Password Rules Indicators */}
@@ -142,17 +97,13 @@ export const SetPassword = () => {
             )}
 
             {/* Set Password Button */}
-            <button
+            <Button
                 type="submit"
                 disabled={!isValid || isSuccess}
-                className={`w-full py-3 rounded-lg text-sm font-medium transition-colors duration-200 mt-4 text-[#FFFFFF] ${
-                    isValid && !isSuccess
-                        ? "bg-[#0F62FE] cursor-pointer"
-                        : "bg-[#ECEDEE] cursor-not-allowed text-gray-400"
-                }`}
+                className="mt-4"
             >
                 Set password
-            </button>
+            </Button>
             
             {/* Success Message UI */}
             {isSuccess && (

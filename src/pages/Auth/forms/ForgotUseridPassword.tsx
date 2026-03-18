@@ -1,6 +1,8 @@
-import { useForm } from "react-hook-form";
-import { useAuthStore } from "../../../store/useAuthStore";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "../../../shared/components/Button";
+import { Input } from "../../../shared/components/Input";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 export const ForgotUseridPassword = () => {
     const [mode, setMode] = useState<'password' | 'userid'>('password');
@@ -55,33 +57,24 @@ export const ForgotUseridPassword = () => {
             </div>
             <form className="flex flex-col w-full gap-6" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-medium text-[#555555]">{mode === 'password' ? 'Client ID' : 'Mobile / Email'}</label>
-                        <input
-                            {...register("identifier")}
-                            placeholder={mode === 'password' ? "Enter user ID" : "Enter mobile / user ID"}
-                            className="w-full px-4 py-3 rounded-lg border border-[#555555] outline-none focus:border-[#0F62FE]
-                            placeholder:text[#555555]"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-medium text-[#555555]">PAN</label>
-                        <input
-                            {...register("pan")}
-                            placeholder="Enter PAN"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-[#0F62FE]"
-                        />
-                    </div>
+                    <Input
+                        {...register("identifier")}
+                        label={mode === 'password' ? 'Client ID' : 'Mobile / Email'}
+                        placeholder={mode === 'password' ? "Enter user ID" : "Enter mobile / user ID"}
+                    />
+                    <Input
+                        {...register("pan")}
+                        label="PAN"
+                        placeholder="Enter PAN"
+                    />
                 </div>
 
-                <button
+                <Button
                     type="submit"
                     disabled={!isFilled}
-                    className={`w-full py-3 rounded-lg text-sm font-medium text-white transition-colors ${isFilled ? "bg-[#0F62FE] cursor-pointer" : "bg-[#ECEDEE] text-gray-400 cursor-not-allowed"
-                        }`}
                 >
                     Proceed
-                </button>
+                </Button>
 
                 <button
                     type="button"
