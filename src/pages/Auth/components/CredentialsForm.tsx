@@ -3,15 +3,17 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../../shared/components/Button";
 import { Input } from "../../../shared/components/Input";
 import { PasswordInput } from "../../../shared/components/PasswordInput";
-import { useAuthStore } from "../../../store/useAuthStore";
-import { loginSchema, type LoginFormData } from "../schema/login.otpSchema";
+import { useLogin } from "../hooks/useLogin";
+import { loginSchema, type LoginFormData } from "../schema/auth.schema";
+import { useAuthFlowStore } from "../store/useAuthFlowStore";
 
 import badgeGreen from "../../../assets/badge-check-green.png";
 import cautionIcon from "../../../assets/Error.png";
 import qrcode from "../../../assets/scan-qr-code.png";
 
 export const CredentialsForm = () => {
-    const { login, error, success, setStep } = useAuthStore();
+    const { login, error, success } = useLogin();
+    const setStep = useAuthFlowStore(state => state.setStep);
 
     const {
         register,
@@ -40,6 +42,7 @@ export const CredentialsForm = () => {
                     {...register("username")}
                     label="Mobile no. / Email / Client ID"
                     placeholder="Enter Mobile no. / Email"
+                    error={errors.username?.message}
                 />
 
                 {/* Password */}
@@ -47,6 +50,7 @@ export const CredentialsForm = () => {
                     {...register("password")}
                     label="Password / MPIN"
                     placeholder="Enter password / MPIN"
+                    error={errors.password?.message}
                 />
 
             </div>
@@ -86,7 +90,7 @@ export const CredentialsForm = () => {
                 </div>
 
             </div>
-            {(error || success || errors.username || errors.password) && (
+            {(error || success) && (
                 <div className={`flex flex-col gap-2 px-4 py-3 rounded-lg mt-4 transition-all duration-300
         ${success ? "bg-[#E8F2EE] text-[#198055]" : "bg-[#FAEBE9] text-[#CA3521]"} 
     `}>
@@ -98,7 +102,7 @@ export const CredentialsForm = () => {
                             className="w-4 h-4 mt-0.5 shrink-0"
                         />
                         <p className="font-inter font-medium text-[14px] leading-5 tracking-normal">
-                            {error || success || errors.username?.message || errors.password?.message}
+                            {success || error}
                         </p>
                     </div>
 

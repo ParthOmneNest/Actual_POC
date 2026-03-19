@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
 import { Button } from "../../../shared/components/Button";
 import { Input } from "../../../shared/components/Input";
-import { useAuthStore } from "../../../store/useAuthStore";
+import { useUnblockUser } from "../hooks/useUnblockUser";
+import { useAuthFlowStore } from "../store/useAuthFlowStore";
 
 export const UnblockUser = () => {
-    const { unblockUser, setStep, clearError } = useAuthStore();
+    const { unblockUser } = useUnblockUser();
+    const setStep = useAuthFlowStore(state => state.setStep);
     
     const { register, handleSubmit, watch } = useForm({
         defaultValues: { username: "", pan: "" }
@@ -51,7 +53,6 @@ export const UnblockUser = () => {
                     type="button"
                     onClick={() => {
                         setStep('otp');
-                        clearError();
                     }} 
                     className="flex items-center justify-center gap-2 text-[#0F62FE] text-sm font-medium cursor-pointer"
                 >

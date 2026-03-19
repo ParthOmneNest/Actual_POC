@@ -1,19 +1,3 @@
-export interface LoginPayload {
-  username: string;
-  password: string;
-}
-
-export interface OtpPayload {
-  username: string;
-  otp: number;         
-}
-
-export interface PreAuthResponse{
-    message:string
-    bffPublicKey:string
-}
-export type LoginResponse=void
-
 export interface KraResponse {
     kraMessage: string
     kraUrl: string[]
@@ -48,4 +32,3 @@ export interface ValidateOtpResponse{
     isPasswordExpired:boolean
     indexEnabledExchanges:string[]|null
 }
-export type LoginStep = 'idle' | 'credentials' | 'otp' |'forgot-credentials'|'set-mpin'|'unblock-user'| 'set-password' | 'success';

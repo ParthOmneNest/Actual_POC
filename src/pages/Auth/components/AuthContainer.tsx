@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { useAuthFlowStore } from "../store/useAuthFlowStore";
 import { CredentialsForm } from "./CredentialsForm";
 import { OtpVerificationForm } from "./OtpVerificationForm";
 import { UnblockUser } from "./UnblockUser";
 
 export const AuthContainer = () => {
-    const { loginStep, runPreHandshake } = useAuthStore();
+    const { runPreHandshake } = useAuthStore();
+    const { loginStep } = useAuthFlowStore();
 
     // Initialize the handshake when the container mounts
     useEffect(() => {

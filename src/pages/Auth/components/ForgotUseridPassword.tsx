@@ -2,11 +2,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../shared/components/Button";
 import { Input } from "../../../shared/components/Input";
-import { useAuthStore } from "../../../store/useAuthStore";
+import { useForgotPassword } from "../hooks/useForgotPassword";
+import { useForgotUserId } from "../hooks/useForgotUserId";
+import { useAuthFlowStore } from "../store/useAuthFlowStore";
 
 export const ForgotUseridPassword = () => {
     const [mode, setMode] = useState<'password' | 'userid'>('password');
-    const { forgotPassword, forgotUserId, setStep,clearError } = useAuthStore();
+    const { forgotPassword } = useForgotPassword();
+    const { forgotUserId } = useForgotUserId();
+    const setStep = useAuthFlowStore(state => state.setStep);
     const { register, handleSubmit, watch, reset } = useForm({
         defaultValues: { identifier: "", pan: "" }
     });
@@ -78,10 +82,9 @@ export const ForgotUseridPassword = () => {
 
                 <button
                     type="button"
-                    onClick={() =>{
-                        setStep('credentials')
-                        clearError();
-                    }} 
+                    onClick={() => {
+                        setStep('credentials');
+                    }}
                     className="flex items-center justify-center gap-2 text-[#0F62FE] text-sm font-medium cursor-pointer"
                 >
                     ← Go back

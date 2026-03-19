@@ -4,12 +4,14 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../../shared/components/Button";
 import { OtpInputBoxes } from "../../../shared/components/OtpInputBoxes";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { otpSchema, type OtpFormData } from "../schema/login.otpSchema";
+import { useOtp } from "../hooks/useOtp";
+import { otpSchema, type OtpFormData } from "../schema/auth.schema";
+import { useAuthFlowStore } from "../store/useAuthFlowStore";
 
 export const OtpVerificationForm = () => {
-    const { validateOtp, error } = useAuthStore();
+    const { validateOtp, error } = useOtp();
     const phoneNumber = useAuthStore.getState().user?.phoneNumber;
-    const storedUsername = useAuthStore.getState().loginUsername;
+    const storedUsername = useAuthFlowStore.getState().loginUsername;
 
     const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
     const [timer, setTimer] = useState(30);

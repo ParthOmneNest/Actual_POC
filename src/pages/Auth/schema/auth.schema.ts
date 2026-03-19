@@ -1,12 +1,10 @@
 import { z } from "zod";
 
-// Login schema
 export const loginSchema=z.object({
     username:z.string().min(1,"Invalid username or password"),
     password:z.string().min(1,"Invalid username or password"),
 })
 
-// otp schema
 export const otpSchema=z.object({
     otp:z.string()
     .min(1,"OTP is required")
@@ -33,7 +31,7 @@ export const setPasswordSchema = z.object({
     path: ["confirmPassword"],
 });
 
-export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type OtpFormData = z.infer<typeof otpSchema>;
+export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
 export type SetPasswordData = z.infer<typeof setPasswordSchema>;

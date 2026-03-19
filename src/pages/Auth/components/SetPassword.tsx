@@ -3,15 +3,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../shared/components/Button";
 import { PasswordInput } from "../../../shared/components/PasswordInput";
-import { useAuthStore } from "../../../store/useAuthStore";
-import { setPasswordSchema, type SetPasswordData } from "../schema/login.otpSchema";
+
+import { setPasswordSchema, type SetPasswordData } from "../schema/auth.schema";
 
 import badgeGreen from "../../../assets/badge-check-green.png";
 import badgeGray from "../../../assets/badge-check.png";
 
 export const SetPassword = () => {
 
-    const { error } = useAuthStore();
+    const error: string | null = null;
 
     const {
         register,

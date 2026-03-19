@@ -2,11 +2,11 @@ import { useState } from "react";
 import badgeGreen from "../../../assets/badge-check-green.png";
 import { Button } from "../../../shared/components/Button";
 import { OtpInputBoxes } from "../../../shared/components/OtpInputBoxes";
-import { useAuthStore } from "../../../store/useAuthStore";
+
 
 export const SetMpin = () => {
     // Note: Assuming there is a `setMpin` or similar action in useAuthStore for submitting this form.
-    const { error } = useAuthStore();
+    const error: string | null = null;
     
     // State for the two 4-digit MPIN arrays
     const [mpin, setMpin] = useState<string[]>(["", "", "", ""]);

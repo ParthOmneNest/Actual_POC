@@ -1,14 +1,14 @@
 import carousel from '../../assets/Carousel.png'
 import illustration from '../../assets/Illustrations.png'
 import logo from '../../assets/OmneNest_icon.png'
-import { useAuthStore } from '../../store/useAuthStore'
-import { AuthContainer } from './forms/AuthContainer'
-import { ForgotUseridPassword } from './forms/ForgotUseridPassword'
-import { SetMpin } from './forms/SetMpin'
-import { SetPassword } from './forms/SetPassword'
+import { useAuthFlowStore } from './store/useAuthFlowStore'
+import { AuthContainer } from './components/AuthContainer'
+import { ForgotUseridPassword } from './components/ForgotUseridPassword'
+import { SetMpin } from './components/SetMpin'
+import { SetPassword } from './components/SetPassword'
 
 export const Login = () => {
-    const { loginStep } = useAuthStore();
+    const { loginStep } = useAuthFlowStore();
     return (
         <div className="flex flex-row w-full h-screen gap-6">
             {/* left side */}
