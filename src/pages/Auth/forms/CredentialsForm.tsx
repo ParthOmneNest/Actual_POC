@@ -16,7 +16,7 @@ export const CredentialsForm = () => {
     const {
         register,
         handleSubmit,
-        formState: { isValid },
+        formState: { errors, isValid },
     } = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
         mode: "onChange", // Validates as the user types, making isValid reliable
@@ -25,6 +25,7 @@ export const CredentialsForm = () => {
     const onLoginSubmit = async (data: LoginFormData) => {
         await login(data);
     };
+    const isLocked = error?.startsWith("LOCKED");
 
     return (
         <form
@@ -85,22 +86,31 @@ export const CredentialsForm = () => {
                 </div>
 
             </div>
+            {(error || success || errors.username || errors.password) && (
+                <div className={`flex flex-col gap-2 px-4 py-3 rounded-lg mt-4 transition-all duration-300
+        ${success ? "bg-[#E8F2EE] text-[#198055]" : "bg-[#FAEBE9] text-[#CA3521]"} 
+    `}>
+                    
+                    <div className="flex flex-row items-start gap-2">
+                        <img
+                            src={success ? badgeGreen : cautionIcon}
+                            alt="status"
+                            className="w-4 h-4 mt-0.5 shrink-0"
+                        />
+                        <p className="font-inter font-medium text-[14px] leading-5 tracking-normal">
+                            {error || success || errors.username?.message || errors.password?.message}
+                        </p>
+                    </div>
 
-            {(error || success) && (
-                <div className={`flex flex-row items-center gap-2 px-4 py-3 rounded-lg mt-4 
-        
-                        ${success ? 
-                        "bg-[#E8F2EE] text-[#198055]":"bg-[#FAEBE9] text-[#CA3521]" }
-                    }`}
-                >
-                    <img
-                        src={success ? badgeGreen : cautionIcon}
-                        alt="status"
-                        className="w-4 h-4 shrink-0"
-                    />
-                    <p className="font-inter font-medium text-[14px] leading-5 tracking-normal">
-                        {error || success}
-                    </p>
+                    {isLocked && !success && (
+                        <button
+                            type="button"
+                            onClick={() => setStep('unblock-user')}
+                            className="bg-[#faebe9] text-[rgb(202,53,33)] cursor-pointer text-left text-[13px] font-bold underline decoration-2 underline-offset-4 hover:opacity-80 transition-opacity ml-6"
+                        >
+                           Account locked? Click here to unblock
+                        </button>
+                    )}
                 </div>
             )}
 

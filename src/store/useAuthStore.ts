@@ -6,6 +6,8 @@ import {
   validateOtpApi,
   forgotUserIdApi,
   forgotPasswordApi,
+  authenticateOtpApi,
+  unblockUserApi,
 } from "../api/auth.api";
 import type {
   LoginPayload,
@@ -23,8 +25,8 @@ interface AuthState {
   loginStep: LoginStep;
   isLoading: boolean;
   error: string | null;
-  success:string|null;
-  flowMode:'login' | 'forgot-password' |'forgot-id'| 'idle'
+  success: string | null;
+  flowMode: 'login' | 'forgot-password' | 'forgot-id' | 'unblock-user' | 'idle'
 
   // actions
   setStep: (step: LoginStep) => void;
@@ -35,13 +37,13 @@ interface AuthState {
   forgotPassword: (pan: string, username: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+  unblockUser: (pan: string, username: string) => Promise<void>;
 
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      // ── initial state ──
       accessToken: null,
       refreshToken: null,
       user: null,
@@ -49,12 +51,11 @@ export const useAuthStore = create<AuthState>()(
       loginUsername: null,
       isLoading: false,
       error: null,
-      success:null,
-      flowMode:'idle',
+      success: null,
+      flowMode: 'idle',
 
       setStep: (step: LoginStep) => set({ loginStep: step, error: null }),
 
-      // ── Step 1: Prehandshake ──
       runPreHandshake: async () => {
         set({ isLoading: true, error: null });
         try {
@@ -71,27 +72,28 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // ── Step 2: Login ──
       login: async (payload: LoginPayload) => {
-        set({flowMode:"login", isLoading: true,success:null, error: null });
+        set({ flowMode: "login", isLoading: true, success: null, error: null });
         try {
           await loginApi(payload.username, payload.password);
           set({ loginStep: "otp", loginUsername: payload.username });
         } catch (error: any) {
-          console.log(" Login failed →", error.response?.data);
-          set({ error: error.response?.data?.message || "Invalid user ID or password" });
+          // Check if it's a 423 status code
+          if (error.response?.status === 423) {
+            set({ error: "LOCKED: " + (error.response?.data?.message || "Account locked.") });
+          } else {
+            set({ error: error.response?.data?.message || "Invalid user ID or password" });
+          };
         } finally {
           set({ isLoading: false });
         }
       },
-
-
-      // 1. Forgot User ID (PAN + Email)
+     
       forgotUserId: async (pan: string, email: string) => {
-        set({ flowMode:'forgot-id', isLoading: true, error: null });
+        set({ flowMode: 'forgot-id', isLoading: true, error: null });
         try {
           await forgotUserIdApi(pan, email);
-          set({ loginStep:"otp" });
+          set({ loginStep: "otp" });
         } catch (error: any) {
           const backendError = error.response?.data?.errors?.[0]?.errorMessage;
           set({ error: backendError || "Failed to retrieve User ID" });
@@ -100,9 +102,8 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // 2. Forgot Password (PAN + Username)
       forgotPassword: async (pan: string, username: string) => {
-        set({flowMode:"forgot-password", isLoading: true, error: null });
+        set({ flowMode: "forgot-password", isLoading: true, error: null });
         try {
           await forgotPasswordApi(pan, username);
 
@@ -118,17 +119,27 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // ── Step 3: Validate OTP ──
       validateOtp: async (payload: OtpPayload) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await validateOtpApi(
-            payload.username,
-            payload.otp.toString()
-          );
-          console.log("OTP response:", response);
-          const {flowMode} = useAuthStore.getState();
-          if (flowMode=='login'&& response.jwtTokens?.accessToken) {
+
+          const { flowMode } = useAuthStore.getState();
+          let response;
+          if (flowMode === 'unblock-user') {
+            response = await authenticateOtpApi(payload.username, payload.otp.toString());
+            // If authenticateOtpApi returns { isUserBlocked: false }
+            if (!response.isUserBlocked) {
+              set({
+                loginStep: 'credentials',
+                success: 'User has been un-blocked successfully',
+                flowMode: 'idle'
+              });
+              return;
+            }
+          } else {
+            response = await validateOtpApi(payload.username, payload.otp.toString());
+          }
+          if (flowMode == 'login' && response.jwtTokens?.accessToken) {
 
             set({
               accessToken: response.jwtTokens?.accessToken,
@@ -137,14 +148,15 @@ export const useAuthStore = create<AuthState>()(
               loginUsername: null,
               loginStep: "success",
             });
-          } else if(flowMode === 'forgot-password') {
+          } else if (flowMode === 'forgot-password') {
             set({
               loginStep: "set-password"
             });
-          } else if(flowMode === 'forgot-id'){
-            set({loginStep:'credentials',
-              success:'UserId has been sent to you register email',
-              error:null
+          } else if (flowMode === 'forgot-id') {
+            set({
+              loginStep: 'credentials',
+              success: 'UserId has been sent to you register email',
+              error: null
             })
           }
         } catch (error: any) {
@@ -157,7 +169,6 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // ── Logout ──
       logout: () => {
         set({
           accessToken: null,
@@ -169,8 +180,20 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
-      // ── Clear Error ──
-      clearError: () => set({ error: null,success:null }),
+      clearError: () => set({ error: null, success: null }),
+
+      unblockUser: async (pan: string, username: string) => {
+        set({ flowMode: 'unblock-user', isLoading: true, error: null });
+
+        try {
+          await unblockUserApi(pan, username);
+          set({ loginStep: 'otp', loginUsername: username });
+        } catch (error: any) {
+          set({ error: error.response?.data?.message || "Unblock request failed" });
+        } finally {
+          set({ isLoading: false });
+        }
+      }
     }),
 
 

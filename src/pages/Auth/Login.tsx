@@ -47,14 +47,15 @@ export const Login = () => {
                         <img src={logo} alt="logo" className="text-[#2A2A2B] w-25 h-8 -mr-16" />
                         <p className="md:hidden text-sm font-semibold ">Nt Web</p>
                     </div>
-                    <h4 className="text-[#2A2A2B] text-xl md:text-2xl font-semibold mb-10 md:mb-16">
-                        {loginStep === 'forgot-credentials' ? 'Forgot password' :
-                            loginStep === 'set-password' ? 'Set password' :
-                                'Welcome to Nest App'}
-                    </h4>
+                  <h4 className="text-[#2A2A2B] text-xl md:text-2xl font-semibold mb-10 md:mb-16">
+            {loginStep === 'forgot-credentials' ? 'Forgot password' :
+             loginStep === 'set-password' ? 'Set password' :
+             loginStep === 'unblock-user' ? 'Unblock Account' : 
+                'Welcome to Nest App'}
+        </h4>
 
                     {/* the various login/otp/forget password forms as per loginstep variable */}
-                    {(loginStep === 'credentials' || loginStep === 'otp' || loginStep === 'idle') && (
+                    {(loginStep === 'credentials' || loginStep === 'otp' || loginStep === 'idle'|| loginStep === 'unblock-user') && (
                         <AuthContainer />
                     )}
 

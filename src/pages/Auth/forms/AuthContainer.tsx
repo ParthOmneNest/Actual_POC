@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { CredentialsForm } from "./CredentialsForm";
 import { OtpVerificationForm } from "./OtpVerificationForm";
+import { UnblockUser } from "./UnblockUser";
 
 export const AuthContainer = () => {
     const { loginStep, runPreHandshake } = useAuthStore();
@@ -29,8 +30,12 @@ export const AuthContainer = () => {
     if (loginStep === "otp") {
         return <OtpVerificationForm />;
     }
+    if(loginStep==='unblock-user'){
+        console.log("Attempting to render UnblockUser component...");
+        return <UnblockUser/>
+    }
 
-    // Fallback if an unknown state is reached (e.g., 'forgot-credentials' stub)
+    // Fallback if an unknown state is reached
     return (
         <div className="flex flex-col items-center justify-center w-full py-10 gap-4">
             <h3 className="font-inter font-semibold">Handling Step: {loginStep}</h3>

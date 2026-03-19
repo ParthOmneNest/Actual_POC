@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import eyeClose from "../../../assets/Eyeclosed.png";
-import eyeOpen from "../../../assets/Eyeopen.png";
+import eyeClose from "../../assets/Eyeclosed.png";
+import eyeOpen from "../../assets/Eyeopen.png";
 
 export interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;

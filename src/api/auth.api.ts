@@ -45,6 +45,19 @@ export const validateOtpApi = async (username: string, otpValue: string) => {
     throw error;
   }
 };
+// ─── Authenticate OTP ─────────────────────────────────────────────
+export const authenticateOtpApi = async (username: string, otpValue: string) => {
+  try {
+    const response = await api.post(
+      "/v1/api/auth/authenticate-otp",
+       { username, otp: parseInt(otpValue, 10),isUserBlocked:false }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Authenticate OTP Validation error:", error.response?.data);
+    throw error;
+  }
+};
 
 // ─── Forgot userId ─────────────────────────────────────────────
 export const forgotUserIdApi = async (panNumber: string, emailId: string) => {
@@ -71,6 +84,19 @@ export const forgotPasswordApi = async (panNumber: string, username: string) => 
     return response.data;
   } catch (error: any) {
     console.error("Forgot Password API Error:", error.response?.data || error.message);
+    throw error; 
+  }
+};
+// ─── Unblock user ─────────────────────────────────────────────
+export const unblockUserApi = async (panNumber: string, username: string) => {
+  try {
+    const response = await api.post("/v1/api/auth/unblock-user", {
+      panNumber,
+      username,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Unblock User API Error:", error.response?.data || error.message);
     throw error; 
   }
 };

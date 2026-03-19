@@ -60,7 +60,7 @@ export const OtpVerificationForm = () => {
             className="flex flex-col w-full gap-6"
             onSubmit={onOtpSubmit}
         >
-            {/* Header / Info */}
+          
             <div className="flex flex-col gap-1">
                 <h4 className="font-inter font-semibold text-lg">
                     Enter OTP
@@ -70,7 +70,6 @@ export const OtpVerificationForm = () => {
                 </p>
             </div>
 
-            {/* OTP Input Boxes */}
             <div className="flex flex-col gap-2">
                 <OtpInputBoxes
                     value={otp}
@@ -80,7 +79,6 @@ export const OtpVerificationForm = () => {
                     type="text"
                 />
 
-                {/* Validation Error Message */}
                 {(otpErrors.otp || error) && (
                     <p className="text-[#CA3521] font-inter font-medium text-[14px] leading-5 tracking-normal text-right">
                         {error || otpErrors.otp?.message}
@@ -88,7 +86,6 @@ export const OtpVerificationForm = () => {
                 )}
             </div>
 
-            {/* Resend Action */}
             <div className="flex justify-end mt-2">
                 {canResend ? (
                     <button
@@ -105,7 +102,6 @@ export const OtpVerificationForm = () => {
                 )}
             </div>
 
-            {/* Submit Button */}
             <Button
                 type="submit"
                 disabled={!isOtpFilled}
