@@ -7,15 +7,17 @@ import { UnblockUser } from "./UnblockUser";
 
 export const AuthContainer = () => {
     const { runPreHandshake } = useAuthStore();
-    const { loginStep } = useAuthFlowStore();
+    const { loginStep, setStep } = useAuthFlowStore();
 
     // Initialize the handshake when the container mounts
     useEffect(() => {
         if (loginStep === 'idle') {
             console.log("Calling prehandshake...");
-            runPreHandshake();
+            runPreHandshake().then(() => {
+                setStep('credentials');
+            });
         }
-    }, [loginStep, runPreHandshake]);
+    }, [loginStep, runPreHandshake, setStep]);
 
     if (loginStep === 'idle') {
         return (
