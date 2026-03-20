@@ -68,7 +68,7 @@ export const OtpVerificationForm = () => {
                     Enter OTP
                 </h4>
                 <p className="font-inter text-sm text-gray-500">
-                    OTP Sent on +91 {phoneNumber}
+                    OTP Sent on +91 {phoneNumber|| 9075423654}
                 </p>
             </div>
 

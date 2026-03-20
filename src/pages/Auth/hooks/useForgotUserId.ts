@@ -16,7 +16,7 @@ export const useForgotUserId = () => {
 
         try {
             await api.post("/v1/api/auth/forgot-user-id", { panNumber: pan, emailId: email });
-            setStep('otp');
+            setStep('credentials');
         } catch (err: any) {
             const backendError = err.response?.data?.errors?.[0]?.errorMessage;
             setError(backendError || "Failed to retrieve User ID");

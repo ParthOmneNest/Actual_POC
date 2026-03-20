@@ -16,13 +16,11 @@ export const UnblockUser = () => {
     const isFilled = watch("username") && watch("pan");
 
     const onSubmit = async (data: { username: string, pan: string }) => {
-        // Calls the unblock API logic defined in your store
         await unblockUser(data.pan, data.username);
     };
 
     return (
         <div className="flex flex-col w-full">
-            {/* Header / Title Area (Optional but recommended for clarity) */}
             <div className="mb-6">
                 <h2 className="text-[20px] font-bold text-[#111111]">Unblock Account</h2>
                 <p className="text-sm text-[#555555] mt-1">Enter your details to receive an OTP and unblock your access.</p>
@@ -52,7 +50,7 @@ export const UnblockUser = () => {
                 <button
                     type="button"
                     onClick={() => {
-                        setStep('otp');
+                        setStep('credentials');
                     }} 
                     className="flex items-center justify-center gap-2 text-[#0F62FE] text-sm font-medium cursor-pointer"
                 >

@@ -10,13 +10,13 @@ export const useUnblockUser = () => {
     const setFlowMode = useAuthFlowStore((state) => state.setFlowMode);
     const setLoginUsername = useAuthFlowStore((state) => state.setLoginUsername);
 
-    const unblockUser = async (pan: string, username: string) => {
+    const unblockUser = async (panNumber: string, username: string) => {
         setIsLoading(true);
         setError(null);
         setFlowMode('unblock-user');
 
         try {
-            await api.post("/v1/api/auth/unblock-user", { panNumber: pan, username });
+            await api.post("/v1/api/auth/unblock-user", { panNumber, username });
             setLoginUsername(username);
             setStep('otp');
         } catch (err: any) {
