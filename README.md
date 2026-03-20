@@ -5,3 +5,5 @@
 ## 2.5 forgot userId
 ### 2.6 forgot password 
 ### set mpin ui
+
+## branch-name: "proper-flow" :-   actual components breakdown branch
