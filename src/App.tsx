@@ -9,7 +9,9 @@ function App() {
 
   return (
     <>
-     {token ? <HomePage /> : <Login />}
+     {/* Temporary bypass for testing UI */}
+     <HomePage />
+     {/* {token ? <HomePage /> : <Login />} */}
     </>
   )
 }
