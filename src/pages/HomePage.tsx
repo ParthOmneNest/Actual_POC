@@ -10,40 +10,43 @@ export const HomePage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
-        <div className="flex flex-row w-full h-screen bg-[#F5F6F8] font-inter">
+        <div className="flex flex-row w-full h-screen bg-[#F5F6F8] font-inter overflow-hidden">
             {/* Left Watchlist Sidebar */}
             {/* <WatchlistPanel /> */}
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col items-center justify-center gap-6 bg-white m-2 rounded-lg shadow-sm border border-[#ECEDEE]">
-                <div className="flex items-center mb-4">
-                    <img
-                        src={logo}
-                        alt="Logo"
-                        className="w-20 h-10 object-contain -mr-10"
-                    />
-                    <span className="text-2xl font-bold text-[#464646]">
-                        NT Web Dashboard
-                    </span>
+            <div className="flex-1 flex flex-col items-stretch bg-white m-2 rounded-lg shadow-sm border border-[#ECEDEE] overflow-hidden">
+                <div className="flex flex-col items-center gap-4 py-6 shrink-0 border-b border-gray-50">
+                    <div className="flex items-center">
+                        <img
+                            src={logo}
+                            alt="Logo"
+                            className="w-20 h-10 object-contain -mr-10"
+                        />
+                        <span className="text-2xl font-bold text-[#464646]">
+                            NT Web Dashboard
+                        </span>
+                    </div>
+
+                    <div className="flex flex-row gap-4">
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="px-6 py-2 bg-[#0F62FE] text-white font-semibold rounded-lg hover:bg-[#0353e9] transition-colors cursor-pointer shadow-sm"
+                        >
+                            Open Test Modal
+                        </button>
+                        <button
+                            onClick={() => logout()}
+                            className="px-6 py-2 bg-[#FAEBE9] text-[#CA3521] font-semibold rounded-lg hover:bg-[#f4d6d3] transition-colors cursor-pointer"
+                        >
+                            Logout
+                        </button>
+                    </div>
                 </div>
 
-                {/* <p className="text-[#555555]">Select a stock from the left watchlist to view its chart and details.</p> */}
-
-                <div className="flex flex-row gap-4">
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="px-6 py-2 bg-[#0F62FE] text-white font-semibold rounded-lg hover:bg-[#0353e9] transition-colors cursor-pointer shadow-sm"
-                    >
-                        Open Test Modal
-                    </button>
-                    <button
-                        onClick={() => logout()}
-                        className="px-6 py-2 bg-[#FAEBE9] text-[#CA3521] font-semibold rounded-lg hover:bg-[#f4d6d3] transition-colors cursor-pointer"
-                    >
-                        Logout
-                    </button>
+                <div className="flex-1 min-h-0">
+                    <OrderList />
                 </div>
-                <OrderList />
             </div>
 
             {/* Reusable Modal Injection */}
